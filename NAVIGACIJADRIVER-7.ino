@@ -170,6 +170,8 @@ void loop() {
 
     NavigationMode nav_mode = Navigation_get_mode();
     NavigationStatus nav_stat = Navigation_get_status();
+    GpsFix gps_fix;
+    GPS_getFix(gps_fix);
 
     Serial.printf("[STATUS] HELM=%d° HDG=%.1f° MODE=", helm, heading);
     if (DriverNOW_isAutopilotEnabled()) Serial.print("AUTOPILOT");
@@ -182,8 +184,18 @@ void loop() {
           break;
       }
     }
-    Serial.printf(" | GPS=%s COMP=%s\n",
-                  nav_stat.gps_valid?"OK":"NO", compass_is_online()?"OK":"ERR");
+    Serial.printf(" | GPS=%s COMP=%s",
+                  gps_fix.valid?"OK":"NO", compass_is_online()?"OK":"ERR");
+    if (gps_fix.valid) {
+      Serial.printf(" LAT=%.6f LON=%.6f SAT=%u HDOP=%.1f AGE=%ums",
+                    gps_fix.lat, gps_fix.lon, gps_fix.sats, gps_fix.hdop,
+                    (unsigned)gps_fix.fix_age_ms);
+    } else if (gps_fix.year) {
+      Serial.printf(" UTC=%04u-%02u-%02u %02u:%02u:%02uZ",
+                    gps_fix.year, gps_fix.month, gps_fix.day,
+                    gps_fix.hour, gps_fix.minute, gps_fix.second);
+    }
+    Serial.println();
 
     DriverConfig cfg = Config_get_current();
     Serial.printf("[TECH] DUTY=%u%% A=%d B=%d ISR=%u\n",
