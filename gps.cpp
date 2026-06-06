@@ -61,11 +61,14 @@ void GPS_loop() {
     s_lastFeedMs = millis();
   }
 
+  // Keep the public fix cache fresh for status output and ESP-NOW users.
+  // Time/date can be valid before latitude/longitude, so update it every loop.
+  snapshotFix(s_lastFix);
+
   // Every GPS_REPORT_MS, print the latest snapshot
   const uint32_t now = millis();
   if (now - s_lastReportMs >= GPS_REPORT_MS) {
     s_lastReportMs = now;
-    snapshotFix(s_lastFix);
 
     if (s_lastFix.valid) {
       // UTC date/time string (if available)
