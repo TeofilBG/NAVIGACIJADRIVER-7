@@ -5,10 +5,10 @@
 // Default UART pins for classic ESP32 DevKit. If you’re on S3 or use other pins,
 // just #define these BEFORE including gps.h, or pass pins to GPS_begin(...).
 #ifndef GPS_RX_PIN   // GPS module TX -> this pin (ESP32 RX)
-#define GPS_RX_PIN 16
+#define GPS_RX_PIN 17
 #endif
 #ifndef GPS_TX_PIN   // GPS module RX -> this pin (ESP32 TX) [often unused]
-#define GPS_TX_PIN 17
+#define GPS_TX_PIN 16
 #endif
 #ifndef GPS_BAUD
 #define GPS_BAUD   9600
